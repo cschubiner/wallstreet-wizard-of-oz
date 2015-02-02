@@ -1,6 +1,7 @@
-ROLES = ['taxman', 'auditor', 'monopolist', 'transferer']
+ROLES = ['taxman', 'auditor', 'monopolist', 'transferer', 'insider_trader', 'bigdonor', 'silencer']
 
-
+names = ['colby','raissa','doug','henry','shelley','nikhil','kyle']
+numPpl = len(names)
 import random,sys
 
 
@@ -88,8 +89,6 @@ if usingFiles:
     fIn = open(sys.argv[1],'r')
     fOut = open(sys.argv[2],'w')
 
-numPpl = getInt('Enter num ppl')
-names = getNames('Enter ppl names (space delimited)', numPpl)
 shuffle(names)
 players = list()
 for i in range(numPpl):
@@ -98,6 +97,11 @@ for i in range(numPpl):
 shuffle(players)
 
 turn = 0
+for i in range(min(len(ROLES), numPpl)):
+    role = ROLES[i]
+    p = getPlayerByRole(players, role)
+    print p.name, "(",role,')'
+
 
 for i in range(10):
     for p in players:
@@ -122,8 +126,16 @@ for i in range(10):
             t.money += 1
         if role == 'monopolist':
             t.money -= 1
+        if role == 'insider_trader':
+            p.money += 2
+        if role == 'bigdonor':
+            t.money += 2
+        if role == 'silencer':
+            p.money -= 1
+            t.money -= 1
 
     printMoney(players, turn)
+
 if usingFiles:
     fIn.close()
     fOut.close()
